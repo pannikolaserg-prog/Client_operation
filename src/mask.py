@@ -11,7 +11,3 @@ def get_mask_account(account_number: str) -> str:
 # ввод номеров карты и счета
 card = "1234567890123456"
 account = "40702810500000012345"
-
-
-print(f"Карта: {get_mask_card_number(card)}")
-print(f"Счет: {get_mask_account(account)}")
