@@ -36,9 +36,6 @@ def mask_account_card(text: str) -> str:
     return text  # если не нашли что маскировать
 
 
-
-
-
 def get_date(date_string: str) -> str:
     """
     Преобразует дату через строковые операции
@@ -50,6 +47,3 @@ def get_date(date_string: str) -> str:
         return f"{day}.{month}.{year}"
     except (IndexError, ValueError):
         return "Некорректный формат даты"
-
-
-
