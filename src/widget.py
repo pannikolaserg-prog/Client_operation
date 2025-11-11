@@ -1,5 +1,4 @@
-from mask import get_mask_account, get_mask_card_number
-
+from src.mask import get_mask_account, get_mask_card_number
 
 
 def mask_bank_data(bank_data: str) -> str:
@@ -14,10 +13,10 @@ def mask_bank_data(bank_data: str) -> str:
     number = parts[-1]
 
     # Извлекаем название (все кроме номера)
-    name = ' '.join(parts[:-1])
+    name = " ".join(parts[:-1])
 
     # Определяем тип данных и применяем маскировку
-    if name.lower() == 'счет':
+    if name.lower() == "счет":
         masked_number = get_mask_account(number)
     else:
         # Это карта (Visa, MasterCard, Maestro, Mir и т.д.)
@@ -38,18 +37,19 @@ def get_date(date_string: str) -> str:
     except (IndexError, ValueError):
         return "Некорректный формат даты"
 
+
 # Примеры использования
 if __name__ == "__main__":
     # Тестовые данные
     test_cases = [
-    "Maestro 1596837868705199",
-    "Счет 64686473678894779589",
-    "MasterCard 7158300734726758",
-    "Счет 35383033474447895560",
-    "Visa Classic 6831982476737658",
-    "Visa Platinum 8990922113665229",
-    "Visa Gold 5999414228426353",
-    "Счет 73654108430135874305"
+        "Maestro 1596837868705199",
+        "Счет 64686473678894779589",
+        "MasterCard 7158300734726758",
+        "Счет 35383033474447895560",
+        "Visa Classic 6831982476737658",
+        "Visa Platinum 8990922113665229",
+        "Visa Gold 5999414228426353",
+        "Счет 73654108430135874305",
     ]
 
     for test in test_cases:
