@@ -1,7 +1,7 @@
 from src.mask import get_mask_account, get_mask_card_number
 
 
-def mask_bank_data(bank_data: str) -> str:
+def mask_account_card(bank_data: str) -> str:
     """
     Функция определяет тип банковских данных (карта или счет)
     и применяет соответствующую маскировку
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     ]
 
     for test in test_cases:
-        result = mask_bank_data(test)
+        result = mask_account_card(test)
         print(f"{test} -> {result}")
 
 print(get_date("2023-12-25T10:30:00"))
