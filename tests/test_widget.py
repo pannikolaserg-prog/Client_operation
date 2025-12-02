@@ -4,7 +4,7 @@ from src.widget import get_date, mask_account_card
 
 
 @pytest.fixture
-def valid_card_numbers():
+def valid_card_numbers() -> list[str]:
     """Фикстура с валидными номерами карт"""
     return [
         "1234567890123456",  # 16 цифр
@@ -14,7 +14,7 @@ def valid_card_numbers():
 
 
 @pytest.fixture
-def valid_account_numbers():
+def valid_account_numbers() -> list[str]:
     """Фикстура с валидными номерами счетов"""
     return [
         "12345678901234567890",  # 20 цифр
@@ -24,7 +24,7 @@ def valid_account_numbers():
 
 
 @pytest.fixture
-def invalid_inputs():
+def invalid_inputs() -> list[object]:
     """Фикстура с некорректными входными данными"""
     return [
         None,  # None
@@ -39,7 +39,7 @@ def invalid_inputs():
 
 
 @pytest.fixture
-def edge_cases():
+def edge_cases() -> list[str]:
     """Фикстура с граничными случаями"""
     return [
         "",  # пустая строка
@@ -66,7 +66,7 @@ def edge_cases():
         ("2024-02-29", "29.02.2024"),  # високосный год
     ],
 )
-def test_date_boundary_cases(input_date, expected):
+def test_date_boundary_cases(input_date: str, expected: str) -> None:
     """Тест граничных случаев дат"""
     assert get_date(input_date) == expected
 
@@ -86,7 +86,7 @@ def test_date_boundary_cases(input_date, expected):
         ("9999-12-31", "31.12.9999"),
     ],
 )
-def test_historical_and_future_dates(input_date, expected):
+def test_historical_and_future_dates(input_date: str, expected: str) -> None:
     """Тест исторических и будущих дат"""
     assert get_date(input_date) == expected
 
@@ -101,7 +101,7 @@ def test_historical_and_future_dates(input_date, expected):
         True,
     ],
 )
-def test_get_date_invalid_types(invalid_input):
+def test_get_date_invalid_types(invalid_input: str) -> None:
     """Тест обработки некорректных типов данных"""
     with pytest.raises((TypeError, ValueError, AttributeError)):
         get_date(invalid_input)

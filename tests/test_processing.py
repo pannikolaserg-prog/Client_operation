@@ -1,3 +1,5 @@
+from typing import Any
+
 import pytest
 
 from src.processing import filter_by_state, sort_by_date
@@ -23,12 +25,12 @@ class TestFilterByState:
             ([{"id": 1, "state": "EXECUTED"}, {"id": 2, "state": "CANCELED"}], "PENDING", 0),
         ],
     )
-    def test_filter_by_state_count(self, input_data, state, expected_count):
+    def test_filter_by_state_count(self, input_data: list[dict[str, Any]], state: str, expected_count: int) -> None:
         """Тестирование количества возвращаемых элементов"""
         result = filter_by_state(input_data, state)
         assert len(result) == expected_count
 
-    def test_filter_by_state_immutability(self):
+    def test_filter_by_state_immutability(self) -> None:
         """Тест на неизменяемость исходных данных"""
         original_data = [{"id": 1, "state": "EXECUTED"}, {"id": 2, "state": "PENDING"}]
         original_data_copy = original_data.copy()
@@ -51,7 +53,7 @@ class TestFilterByState:
             ([{"id": 1, "state": 123}, {"id": 2, "state": "EXECUTED"}], "EXECUTED"),
         ],
     )
-    def test_filter_by_state_edge_cases(self, input_data, state):
+    def test_filter_by_state_edge_cases(self, input_data: list[dict[str, Any]], state: str) -> None:
         """Тестирование граничных случаев"""
         result = filter_by_state(input_data, state)
         # Проверяем, что возвращается только элемент с state="EXECUTED"
@@ -63,7 +65,7 @@ class TestFilterByState:
 class TestSortByDate:
 
     @pytest.fixture
-    def sample_data(self):
+    def sample_data(self) -> list[dict[str, Any]]:
         """Фикстура с тестовыми данными"""
         return [
             {"id": 1, "date": "2023-10-01T12:00:00", "amount": 100},
@@ -81,7 +83,9 @@ class TestSortByDate:
             (False, [4, 2, 1, 3]),  # 2023-08-05, 2023-09-15, 2023-10-01, 2023-11-20
         ],
     )
-    def test_sort_by_date_basic(self, sample_data, reverse, expected_order):
+    def test_sort_by_date_basic(
+        self, sample_data: list[dict[str, Any]], reverse: bool, expected_order: list[int]
+    ) -> None:
         """Тестирование базовой сортировки по дате"""
         result = sort_by_date(sample_data, reverse=reverse)
 
@@ -103,13 +107,15 @@ class TestSortByDate:
             ([{"id": 1, "date": "2023-10-01T12:00:00"}, {"id": 2, "date": "2023-09-01T12:00:00"}], False, [2, 1]),
         ],
     )
-    def test_sort_by_date_edge_cases(self, input_data, reverse, expected):
+    def test_sort_by_date_edge_cases(
+        self, input_data: list[dict[str, Any]], reverse: bool, expected: list[int]
+    ) -> None:
         """Тестирование граничных случаев"""
         result = sort_by_date(input_data, reverse=reverse)
         result_ids = [item["id"] for item in result]
         assert result_ids == expected
 
-    def test_sort_by_date_default_parameter(self, sample_data):
+    def test_sort_by_date_default_parameter(self, sample_data: list[dict[str, Any]]) -> None:
         """Тестирование значения по умолчанию для reverse (True)"""
         result_default = sort_by_date(sample_data)
         result_explicit = sort_by_date(sample_data, reverse=True)
@@ -127,7 +133,7 @@ class TestSortByDate:
             [{"id": 1, "date": None}],  # None вместо строки
         ],
     )
-    def test_sort_by_date_invalid_dates(self, invalid_data):
+    def test_sort_by_date_invalid_dates(self, invalid_data: list[dict[str, Any]]) -> None:
         """Тестирование сортировки с некорректными датами"""
         # Функция должна отработать без ошибок, но сортировка может быть непредсказуемой
         result = sort_by_date(invalid_data, reverse=True)
