@@ -65,6 +65,27 @@ class TestFilterByCurrency:
         assert len(eur_transactions) == 1
         assert eur_transactions[0]["id"] == 895315941
 
+    def test_empty_transactions_list(self):
+        """Тест с пустым списком транзакций."""
+        result = list(filter_by_currency([], "USD"))
+        assert result == []
+
+    def test_transaction_without_currency(self, sample_transactions: List[Dict[str, Any]]) -> None:
+        """Тест обработки транзакций без информации о валюте."""
+        # Транзакция с id 123 не имеет operationAmount, должна быть проигнорирована
+        result = list(filter_by_currency(sample_transactions, "USD"))
+        assert len(result) == 2
+        assert all("operationAmount" in trans for trans in result)
+
+    def test_filter_rub_transactions(self, sample_transactions: List[Dict[str, Any]]) -> None:
+        """Тест фильтрации RUB транзакций."""
+        rub_transactions = list(filter_by_currency(sample_transactions, "RUB"))
+
+        assert len(rub_transactions) == 1
+        assert rub_transactions[0]["id"] == 873106923
+        assert rub_transactions[0]["operationAmount"]["currency"]["code"] == "RUB"
+
+
 
 @pytest.fixture
 def transaction_samples() -> list[dict[str, Any]]:
@@ -118,6 +139,7 @@ class TestTransactionDescriptions:
         descriptions = list(transaction_descriptions([]))
         assert descriptions == []
 
+
     @pytest.mark.parametrize(
         "input_data,expected",
         [
@@ -131,6 +153,7 @@ class TestTransactionDescriptions:
         """Параметризованный тест для различных входных данных."""
         result = list(transaction_descriptions(input_data))
         assert result == expected
+
 
     @pytest.mark.parametrize(
         "start,end,expected_count",

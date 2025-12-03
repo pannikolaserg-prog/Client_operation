@@ -1,5 +1,7 @@
 import pytest
 
+from typing import Any, Dict, List
+
 from src.widget import get_date, mask_account_card
 
 
@@ -49,6 +51,8 @@ def edge_cases() -> list[str]:
     ]
 
 
+
+
 @pytest.mark.parametrize(
     "input_date,expected",
     [
@@ -92,16 +96,53 @@ def test_historical_and_future_dates(input_date: str, expected: str) -> None:
 
 
 @pytest.mark.parametrize(
-    "invalid_input",
-    [
-        None,
-        123456789,
-        ["2023-12-31"],
-        {"date": "2023-12-31"},
-        True,
-    ],
-)
+        "invalid_input",
+        [
+            None,
+            123456789,
+            20231231,
+            ["2023-12-31"],
+            {"date": "2023-12-31"},
+            True,
+            False,
+            3.14,
+        ],
+    )
 def test_get_date_invalid_types(invalid_input: str) -> None:
     """Тест обработки некорректных типов данных"""
     with pytest.raises((TypeError, ValueError, AttributeError)):
         get_date(invalid_input)
+
+
+class TestMaskAccountCard:
+    """Тесты для функции mask_account_card."""
+
+    @pytest.mark.parametrize(
+        "input_string,expected",
+        [
+            # Короткие названия карт
+            ("Visa 1234567890123456", "Visa 1234 56** **** 3456"),
+            ("MC 5555555555554444", "MC 5555 55** **** 4444"),
+            ("МИР 1234567890123456", "МИР 1234 56** **** 3456"),
+            # Длинные названия
+            ("Платиновая карта Visa Signature 1234567890123456",
+             "Платиновая карта Visa Signature 1234 56** **** 3456"),
+            ("Кредитная карта MasterCard World Elite 5555555555554444",
+             "Кредитная карта MasterCard World Elite 5555 55** **** 4444"),
+        ]
+    )
+    def test_various_card_prefixes(self, input_string: str, expected: str) -> None:
+        """Тест различных форматов префиксов карт"""
+        assert mask_account_card(input_string) == expected
+
+    @pytest.mark.parametrize(
+        "input_string,expected",
+        [
+            ("счет 12345678901234567890", "счет **7890"),  # нижний регистр
+            ("СЧЕТ 12345678901234567890", "СЧЕТ **7890"),  # верхний регистр
+            ("СчЕт 12345678901234567890", "СчЕт **7890"),  # смешанный регистр
+        ]
+    )
+    def test_case_variations_account(self, input_string: str, expected: str) -> None:
+        """Тест различных вариаций регистра для счетов"""
+        assert mask_account_card(input_string) == expected
