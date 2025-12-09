@@ -126,7 +126,7 @@ for _ in range(5):
     print(next(descriptions))
 
 
-def card_number_generator(start: int, stop: int) -> Iterator [str]:
+def card_number_generator(start: int, stop: int) -> Iterator[str]:
     """
     Генератор номеров банковских карт в формате XXXX XXXX XXXX XXXX.
 

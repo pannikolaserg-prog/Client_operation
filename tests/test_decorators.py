@@ -1,3 +1,4 @@
+from src.decorators import log
 import os
 import tempfile
 import pytest
@@ -5,46 +6,6 @@ from typing import Callable, Any, Generator, TextIO, Tuple, Dict, List
 import functools
 from _pytest.capture import CaptureFixture, CaptureResult
 from _pytest.monkeypatch import MonkeyPatch
-
-
-# Реализация декоратора для тестирования
-def log(filename: str | None = None) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
-    """
-    Декоратор для логирования выполнения функций.
-
-    Args:
-        filename: Если задан, логи пишутся в файл, иначе - в консоль.
-    """
-
-    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
-        @functools.wraps(func)
-        def wrapper(*args: Any, **kwargs: Any) -> Any:
-            try:
-                result = func(*args, **kwargs)
-                message = f"{func.__name__} ok\n"
-
-                if filename:
-                    with open(filename, "a", encoding="utf-8") as f:
-                        f.write(message)
-                else:
-                    print(message.strip())
-
-                return result
-
-            except Exception as e:
-                message = f"{func.__name__} error: {type(e).__name__}: {str(e)}. Inputs: {args}, {kwargs}\n"
-
-                if filename:
-                    with open(filename, "a", encoding="utf-8") as f:
-                        f.write(message)
-                else:
-                    print(message.strip())
-
-                raise
-
-        return wrapper
-
-    return decorator
 
 
 # Тестируемые функции с аннотациями типов
