@@ -18,7 +18,7 @@ def log(filename: str = None) -> Callable:
                 message = f"{func.__name__} ok\n"
 
                 if filename:
-                    with open(filename, 'a', encoding='utf-8') as f:
+                    with open(filename, "a", encoding="utf-8") as f:
                         f.write(message)
                 else:
                     print(message.strip())
@@ -29,7 +29,7 @@ def log(filename: str = None) -> Callable:
                 message = f"{func.__name__} error: {type(e).__name__}: {str(e)}. Inputs: {args}, {kwargs}\n"
 
                 if filename:
-                    with open(filename, 'a', encoding='utf-8') as f:
+                    with open(filename, "a", encoding="utf-8") as f:
                         f.write(message)
                 else:
                     print(message.strip())
@@ -43,20 +43,18 @@ def log(filename: str = None) -> Callable:
 
 # Пример использования согласно условию
 if __name__ == "__main__":
+
     @log(filename="mylog.txt")
     def my_function(x, y):
         return x + y
 
-
     # Успешное выполнение
     my_function(1, 2)
-
 
     # Функция с ошибкой
     @log()
     def divide(a, b):
         return a / b
-
 
     try:
         divide(10, 0)
