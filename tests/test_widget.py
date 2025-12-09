@@ -1,0 +1,150 @@
+from typing import Any, Dict, List
+
+import pytest
+
+from src.widget import get_date, mask_account_card
+
+
+@pytest.fixture
+def valid_card_numbers() -> list[str]:
+    """Фикстура с валидными номерами карт"""
+    return [
+        "1234567890123456",  # 16 цифр
+        "4111111111111111",  # Visa
+        "5555555555554444",  # Mastercard
+    ]
+
+
+@pytest.fixture
+def valid_account_numbers() -> list[str]:
+    """Фикстура с валидными номерами счетов"""
+    return [
+        "12345678901234567890",  # 20 цифр
+        "40817810099910004312",  # расчетный счет
+        "30101810200000000822",  # корр счет
+    ]
+
+
+@pytest.fixture
+def invalid_inputs() -> list[object]:
+    """Фикстура с некорректными входными данными"""
+    return [
+        None,  # None
+        1234567890123456,  # число
+        12345678901234567890,  # длинное число
+        [],  # список
+        {},  # словарь
+        "1234abcd5678efgh",  # буквы в номере
+        "1234 5678 9012 3456",  # пробелы
+        "1234-5678-9012-3456",  # дефисы
+    ]
+
+
+@pytest.fixture
+def edge_cases() -> list[str]:
+    """Фикстура с граничными случаями"""
+    return [
+        "",  # пустая строка
+        "1",  # одна цифра
+        "12",  # две цифры
+        "123",  # три цифры
+    ]
+
+
+@pytest.mark.parametrize(
+    "input_date,expected",
+    [
+        # Первые и последние дни месяцев
+        ("2023-01-01", "01.01.2023"),  # первый день года
+        ("2023-01-31", "31.01.2023"),  # последний день января
+        ("2023-02-28", "28.02.2023"),  # последний день февраля (не високосный)
+        ("2023-12-31", "31.12.2023"),  # последний день года
+        # Граничные значения месяцев
+        ("2023-01-15", "15.01.2023"),  # середина января
+        ("2023-06-15", "15.06.2023"),  # середина года
+        ("2023-12-15", "15.12.2023"),  # середина декабря
+        # Високосные годы
+        ("2020-02-29", "29.02.2020"),  # високосный год
+        ("2024-02-29", "29.02.2024"),  # високосный год
+    ],
+)
+def test_date_boundary_cases(input_date: str, expected: str) -> None:
+    """Тест граничных случаев дат"""
+    assert get_date(input_date) == expected
+
+
+@pytest.mark.parametrize(
+    "input_date,expected",
+    [
+        # Исторические даты
+        ("1999-12-31", "31.12.1999"),
+        ("2000-01-01", "01.01.2000"),  # начало нового тысячелетия
+        ("1970-01-01", "01.01.1970"),  # Unix epoch
+        # Будущие даты
+        ("2030-12-31", "31.12.2030"),
+        ("2050-01-01", "01.01.2050"),
+        # Крайние даты
+        ("1900-01-01", "01.01.1900"),
+        ("9999-12-31", "31.12.9999"),
+    ],
+)
+def test_historical_and_future_dates(input_date: str, expected: str) -> None:
+    """Тест исторических и будущих дат"""
+    assert get_date(input_date) == expected
+
+
+@pytest.mark.parametrize(
+    "invalid_input",
+    [
+        None,
+        123456789,
+        20231231,
+        ["2023-12-31"],
+        {"date": "2023-12-31"},
+        True,
+        False,
+        3.14,
+    ],
+)
+def test_get_date_invalid_types(invalid_input: str) -> None:
+    """Тест обработки некорректных типов данных"""
+    with pytest.raises((TypeError, ValueError, AttributeError)):
+        get_date(invalid_input)
+
+
+class TestMaskAccountCard:
+    """Тесты для функции mask_account_card."""
+
+    @pytest.mark.parametrize(
+        "input_string,expected",
+        [
+            # Короткие названия карт
+            ("Visa 1234567890123456", "Visa 1234 56** **** 3456"),
+            ("MC 5555555555554444", "MC 5555 55** **** 4444"),
+            ("МИР 1234567890123456", "МИР 1234 56** **** 3456"),
+            # Длинные названия
+            (
+                "Платиновая карта Visa Signature 1234567890123456",
+                "Платиновая карта Visa Signature 1234 56** **** 3456",
+            ),
+            (
+                "Кредитная карта MasterCard World Elite 5555555555554444",
+                "Кредитная карта MasterCard World Elite 5555 55** **** 4444",
+            ),
+        ],
+    )
+    def test_various_card_prefixes(self, input_string: str, expected: str) -> None:
+        """Тест различных форматов префиксов карт"""
+        assert mask_account_card(input_string) == expected
+
+    @pytest.mark.parametrize(
+        "input_string,expected",
+        [
+            ("счет 12345678901234567890", "счет **7890"),  # нижний регистр
+            ("СЧЕТ 12345678901234567890", "СЧЕТ **7890"),  # верхний регистр
+            ("СчЕт 12345678901234567890", "СчЕт **7890"),  # смешанный регистр
+        ],
+    )
+    def test_case_variations_account(self, input_string: str, expected: str) -> None:
+        """Тест различных вариаций регистра для счетов"""
+        assert mask_account_card(input_string) == expected
