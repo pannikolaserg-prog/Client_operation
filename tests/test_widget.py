@@ -1,5 +1,3 @@
-from typing import Any, Dict, List
-
 import pytest
 
 from src.widget import get_date, mask_account_card
