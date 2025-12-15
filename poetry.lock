@@ -447,6 +447,21 @@ pytest = ">=7"
 testing = ["process-tests", "pytest-xdist", "virtualenv"]
 
 [[package]]
+name = "python-dotenv"
+version = "1.2.1"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "python_dotenv-1.2.1-py3-none-any.whl", hash = "sha256:b81ee9561e9ca4004139c6cbba3a238c32b03e4894671e181b671e8cb8425d61"},
+    {file = "python_dotenv-1.2.1.tar.gz", hash = "sha256:42667e897e16ab0d66954af0e60a9caa94f0fd4ecf3aaf6d2d260eec1aa36ad6"},
+]
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
 name = "pytokens"
 version = "0.2.0"
 description = "A Fast, spec compliant Python 3.13+ tokenizer that runs on older Pythons."
@@ -476,4 +491,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "43c15d4b40e26b9dc4090308565270876da3b72ef2b9fa0bddbe4b344cfe177c"
+content-hash = "1d85f5e2e4cea3d28d20421e1de255b744b0a4122a1af4458381150c80ca63d0"

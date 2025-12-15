@@ -1,11 +1,11 @@
-from src.decorators import log
 import os
 import tempfile
+from typing import Dict, Generator, List
+
 import pytest
-from typing import Callable, Any, Generator, TextIO, Tuple, Dict, List
-import functools
 from _pytest.capture import CaptureFixture, CaptureResult
-from _pytest.monkeypatch import MonkeyPatch
+
+from src.decorators import log
 
 
 # Тестируемые функции с аннотациями типов
