@@ -32,6 +32,9 @@ def load_transactions(file_path: Union[str, Path]) -> List[Dict[str, Any]]:
         else:
             # Если данные не являются списком
             return []
+    except FileNotFoundError:
+        # Файл не найден - возвращаем пустой список
+        return []
     except (json.JSONDecodeError, OSError):
         # Обработка ошибок парсинга JSON или чтения файла
         return []
