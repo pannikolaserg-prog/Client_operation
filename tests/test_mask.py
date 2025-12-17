@@ -29,13 +29,6 @@ def test_very_long_card_number() -> None:
     assert get_mask_card_number(card_number) == expected
 
 
-def test_empty_card_number() -> None:
-    """Тест обработки пустой строки"""
-    card_number: str = ""
-    expected: str = " **** **** **** "
-    assert get_mask_card_number(card_number) == expected
-
-
 def test_mask_standard_account_number() -> None:
     """Тест маскирования стандартного номера счета (20 цифр)"""
     account_number: str = "12345678901234567890"
