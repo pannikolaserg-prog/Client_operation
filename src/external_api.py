@@ -19,7 +19,7 @@ def get_amount_in_rub(transaction: Dict[str, Any]) -> float:
 
     Args:
         transaction: Словарь с данными транзакции.
-            Ожидаемые ключи: 'amount' (число), 'currency' (str).
+            Ожидаемые ключи: 'amount' (число), 'currency' (dict).
 
     Returns:
         Сумма в рублях как float.
@@ -32,16 +32,15 @@ def get_amount_in_rub(transaction: Dict[str, Any]) -> float:
     # Получаем данные из транзакции с проверкой ключей
     try:
         # Ищем сумму в разных возможных ключах
-        amount_raw = transaction.get('amount') or transaction.get('sum') or transaction.get('value')
+        amount_raw = transaction.get('amount')
         if amount_raw is None:
-            raise KeyError("Не найден ключ с суммой транзакции (проверьте 'amount', 'sum', 'value')")
+            raise KeyError("Не найден ключ с суммой транзакции (проверьте 'amount')")
 
         # Ищем валюту в разных возможных ключах
-        currency_raw = transaction.get('currency') or transaction.get('currency_code') or transaction.get(
-            'currencyName')
+        currency_raw = transaction.get('currency')
         if currency_raw is None:
             raise KeyError(
-                "Не найден ключ с валютой транзакции (проверьте 'currency', 'currency_code', 'currencyName')")
+                "Не найден ключ с валютой транзакции (проверьте 'currency')")
     except KeyError as e:
         raise KeyError(f"В транзакции отсутствуют необходимые данные: {e}")
 
