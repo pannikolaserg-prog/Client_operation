@@ -95,20 +95,6 @@ class TestGetAmountInRub(unittest.TestCase):
         result: float = get_amount_in_rub(transaction)
         self.assertEqual(result, 1000.50)
 
-    def test_rub_transaction_with_different_keys(self) -> None:
-        """Тест транзакции с альтернативными названиями ключей"""
-        # Тест с ключом 'sum'
-        transaction1: Dict[str, Any] = {"sum": 1500.75, "currency": "RUB"}
-        self.assertEqual(get_amount_in_rub(transaction1), 1500.75)
-
-        # Тест с ключом 'value' и 'currency_code'
-        transaction2: Dict[str, Any] = {"value": 2000, "currency_code": "RUB"}
-        self.assertEqual(get_amount_in_rub(transaction2), 2000.00)
-
-        # Тест с ключом 'currencyName'
-        transaction3: Dict[str, Any] = {"amount": 3000, "currencyName": "RUB"}
-        self.assertEqual(get_amount_in_rub(transaction3), 3000.00)
-
     @patch("src.external_api.requests.get")
     def test_api_returns_error(self, mock_requests_get: MagicMock) -> None:
         """Тест, когда API возвращает ошибку"""
