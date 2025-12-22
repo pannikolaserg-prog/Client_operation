@@ -1,8 +1,7 @@
-import unittest
-from unittest.mock import patch, Mock
-import json
 import os
 import sys
+import unittest
+from unittest.mock import Mock, patch
 
 # Добавляем путь к src для импорта
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
@@ -186,6 +185,7 @@ class TestMockRequestsLibrary(unittest.TestCase):
         """Тест получения API ключа из переменных окружения"""
         # Перезагружаем модуль, чтобы обновить API_KEY
         import importlib
+
         import src.external_api
 
         importlib.reload(src.external_api)
