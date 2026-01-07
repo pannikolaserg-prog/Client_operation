@@ -7,28 +7,41 @@ import pandas as pd
 csv_file_path = os.path.join("data", "transactions.csv")
 excel_file_path = os.path.join("data", "transactions_excel.xlsx")
 
+import csv
 
-def read_csv_file() -> List[Dict[str, Any]]:
+
+def read_csv_file(filepath: str = "data/transactions.csv") -> list[dict]:
     """
-    Читает данные из CSV файла и возвращает список словарей с транзакциями.
+    Читает CSV файл и возвращает список словарей с транзакциями.
+
+    Args:
+        filepath: Путь к CSV файлу
 
     Returns:
-        List[Dict[str, Any]]: Список транзакций, где каждая транзакция - словарь
+        Список словарей с транзакциями
     """
-    try:
-        # Читаем CSV в DataFrame
-        df = pd.read_csv(csv_file_path)
-        print(f"CSV прочитан: {len(df)} записей")
+    transactions = []
 
-        # Конвертируем DataFrame в список словарей
-        transactions = df.to_dict(orient="records")
+    try:
+        with open(filepath, "r", encoding="utf-8") as file:
+            # Используем csv.DictReader для автоматического разделения полей
+            csv_reader = csv.DictReader(file, delimiter=";")
+
+            for row in csv_reader:
+                # Преобразуем строку в словарь
+                transaction = {}
+                for key, value in row.items():
+                    transaction[key.strip()] = value.strip() if value else ""
+                transactions.append(transaction)
+
+        print(f"CSV прочитан: {len(transactions)} записей")
         return transactions
 
     except FileNotFoundError:
-        print(f"Ошибка: файл {csv_file_path} не найден")
+        print(f"Файл {filepath} не найден!")
         return []
     except Exception as e:
-        print(f"Ошибка при чтении CSV: {e}")
+        print(f"Ошибка при чтении CSV файла: {e}")
         return []
 
 
