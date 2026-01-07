@@ -6,8 +6,18 @@ def mask_account_card(bank_data: str) -> str:
     Функция определяет тип банковских данных (карта или счет)
     и применяет соответствующую маскировку
     """
+    if not bank_data:
+        return ""
+
+    # Преобразуем в строку на всякий случай
+    bank_data_str = str(bank_data)
+
     # Разделяем входную строку на части
-    parts = bank_data.split()
+    parts = bank_data_str.split()
+
+    # Если нет частей, возвращаем исходную строку
+    if not parts:
+        return bank_data_str
 
     # Извлекаем номер (последний элемент)
     number = parts[-1]

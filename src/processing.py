@@ -1,12 +1,29 @@
-def filter_by_state(data: list, state: str = "EXECUTED") -> list:
+def filter_by_state(transactions: list[dict], state: str = "EXECUTED") -> list[dict]:
     """
-    Фильтрует список словарей по значению ключа 'state'
-    """
+    Фильтрует транзакции по статусу.
 
-    if not data:
+    Args:
+        transactions: Список словарей с транзакциями
+        state: Статус для фильтрации ("EXECUTED", "CANCELED", "PENDING")
+
+    Returns:
+        Список отфильтрованных транзакций
+    """
+    if not transactions:
         return []
 
-    return [item for item in data if item.get("state") == state]
+    # Проверяем наличие поля 'state' (нижний регистр)
+    if "state" in transactions[0]:
+        key = "state"
+    # Проверяем наличие поля 'STATE' (верхний регистр)
+    elif "STATE" in transactions[0]:
+        key = "STATE"
+    else:
+        # Если нет явного поля state, ищем в других полях
+        return [t for t in transactions if str(t).upper().find(state.upper()) != -1]
+
+    # Фильтруем с учетом регистра
+    return [t for t in transactions if str(t.get(key, "")).upper() == state.upper()]
 
 
 def sort_by_date(data: list, reverse: bool = True) -> list:
